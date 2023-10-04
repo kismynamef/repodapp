@@ -51,7 +51,8 @@ export const ContextProvider = ({ children }) => {
     connect,
     client: client.current,
     state,
-    setState
+    setState,
+    setIsConnected
   }
 
   return (

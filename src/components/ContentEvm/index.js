@@ -45,7 +45,7 @@ function stringifiableToHex(value) {
 
 function ContentEvm() {
   const [state, setState] = useState({})
-  const { client, isExtension, isConnected, connect: onConnect } = useConnect()
+  const { client, isExtension, isConnected, connect: onConnect, setIsConnected } = useConnect()
   const [tabIndex, setTabIndex] = useState(networkData[0])
 
   const onStateUpdate = (field, value) => {
@@ -607,7 +607,23 @@ function ContentEvm() {
       accounts
     })
   }
+  const onChangeWallet = async () => {
+    await _provider.on('accountsChanged', handleAccountsChanged)
 
+  }
+  const handleAccountsChanged = (accounts) => {
+    // Handle new accounts, or lack thereof.
+    const account = accounts[0]
+    if (account) {
+      onStateUpdate('ethAccounts', accounts)
+      return onInitState()
+    }
+    if (!account) {
+      console.log("leu leu do ngu")
+      setIsConnected(false)
+      setState({})
+    }
+  }
   // funtions handle
   const handleOpenModal = (content, onClickModal, isDisableRunCode) => () => {
     window.openModal({
@@ -620,6 +636,7 @@ function ContentEvm() {
   useEffect(() => {
     if (isConnected) {
       onInitState()
+      onChangeWallet()
     }
   }, [isConnected, tabIndex])
 
