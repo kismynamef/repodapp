@@ -615,6 +615,7 @@ function ContentEvm() {
     // Handle new accounts, or lack thereof.
     const account = accounts[0]
     if (account) {
+      console.log("leu leu do cho")
       onStateUpdate('ethAccounts', accounts)
       return onInitState()
     }
