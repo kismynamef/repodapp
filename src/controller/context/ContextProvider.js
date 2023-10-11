@@ -29,6 +29,7 @@ export const ContextProvider = ({ children }) => {
         }).then(result => {
           setIsConnected(true)
         }).catch(error => {
+          console.log("error", error)
           setIsConnected(false)
         })
       } catch (e) { }

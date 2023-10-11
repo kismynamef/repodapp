@@ -91,6 +91,7 @@ function ContentEvm() {
       const response = await _provider.request({
         method: 'eth_accounts'
       })
+      
       onStateUpdate(
         'ethAccounts',
         isExtension ? response : response.error || response.result
@@ -151,8 +152,9 @@ function ContentEvm() {
       const msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`
       const response = await _provider.request({
         method: 'personal_sign',
-        params: [msg, from, exampleMessage]
+        params: [msg, from]
       })
+      console.log("response", response)
       onStateUpdate(
         'personalSign',
         isExtension ? response : response.error || response.result
@@ -164,7 +166,7 @@ function ContentEvm() {
 
   const onVerifyPersonalSignature = async () => {
     const { ethAccounts: accounts, personalSign } = state
-    const exampleMessage = 'Coin98 Connect Example Message'
+    const exampleMessage = 'Ramper2 Connect Example Message'
     try {
       const from = accounts[0]
       const msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`
@@ -174,6 +176,8 @@ function ContentEvm() {
         data: msg,
         sig: sign
       })
+      console.log("recoveredAddr", recoveredAddr)
+      console.log("from", from)
       if (recoveredAddr === from) {
         console.log(`SigUtil Successfully verified signer as ${recoveredAddr}`)
         sign = recoveredAddr
@@ -470,10 +474,11 @@ function ContentEvm() {
 
   const onVerifySignTypedDataV4 = async () => {
     const { ethAccounts: accounts } = state
+    const chainId = tabIndex.value
 
     const msgParams = {
       domain: {
-        chainId: '0x1',
+        chainId: chainId,
         name: 'Ether Mail',
         verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
         version: '1'
