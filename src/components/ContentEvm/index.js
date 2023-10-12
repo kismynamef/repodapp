@@ -65,12 +65,12 @@ function ContentEvm() {
 
   const onSwitchNetwork = (tab) => async () => {
     try {
+      if (tab.value === state.chainId || !isConnected) return
       const response = await _provider.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: tab.value }]
       })
       if (!response) return
-      console.log("response", response)
       setTabIndex(tab)
     } catch (error) {
       onStateUpdate('ethAccounts', error.toString())
@@ -91,7 +91,7 @@ function ContentEvm() {
       const response = await _provider.request({
         method: 'eth_accounts'
       })
-      
+
       onStateUpdate(
         'ethAccounts',
         isExtension ? response : response.error || response.result
